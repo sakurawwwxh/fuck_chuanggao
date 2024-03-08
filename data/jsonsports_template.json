@@ -1,0 +1,50 @@
+{
+    "activeTime": "",
+    "alreadyPassPoint": "",
+    "alreadyPassPointResult": "",
+    "avgPace": "",
+    "avgSpeed": "",
+    "beganPoint": "",
+    "beginTime": "",
+    "calorie": 0.0,
+    "coordinate": [
+        {
+            "a": 0.0,
+            "ac": 0.0,
+            "d": 0.0,
+            "da": 0.0,
+            "o": 0.0,
+            "s": 0.0,
+            "st": 0,
+            "sta": 0,
+            "t": 0,
+            "v": 0
+        }
+    ],
+    "endPoint": "",
+    "endTime": "",
+    "indoor": 0,
+    "isValid": 0,
+    "isValidReason": "0",
+    "lastOdometerTime": "00:00:00",
+    "maxSpeedPerHour": "0.00",
+    "minSpeedPerHour": "0.00",
+    "minuteSpeed": [
+        {
+            "min": "1",
+            "v": "0.0"
+        }
+    ],
+    "modementMode": "",
+    "name": "",
+    "needPassPointCount": "",
+    "odometer": "",
+    "pace": [],
+    "phoneVersion": "",
+    "planRouteName": "",
+    "routeId": "",
+    "sportId": "",
+    "stepCount": 0,
+    "stepMinute": "0.0",
+    "xh": ""
+}

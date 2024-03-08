@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>创高fucker</title>
+  <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+  <!-- <script src='https://a.amap.com/jsapi_demos/static/citys.js'></script> -->
+  <style>
+    html,
+    body,
+    #container {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #container canvas.drawing {
+      cursor: crosshair;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <div class="input-card" style="width: auto;">
+    <div class="input-item">
+      <button class="btn" onclick="startDrawing()">开始绘制</button>
+    </div>
+    <div class="input-item">
+      <button class="btn" onclick="endDrawing()">结束绘制 (开环路线)</button>
+    </div>
+    <div class="input-item">
+      <button class="btn" onclick="endCircle()">结束绘制 (路线闭合)</button>
+    </div>
+    <hr />
+    <div class="input-item">
+      <button class="btn" onclick="setLine(line1, false)">经典线路1</button>
+    </div>
+    <div class="input-item">
+      <button class="btn" onclick="setLine(line2, true)">经典线路2</button>
+    </div>
+    <div class="input-item">
+      <button class="btn" onclick="setLine(line3, true)">经典线路3</button>
+    </div>
+    <hr />
+    <div class="input-item">
+      <button class="btn" onclick="startRunning()">开始运动</button>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key={{ key }}"></script>
+  <script type="text/javascript" src="https://webapi.amap.com/loader.js"></script>
+  <script type="text/javascript">
+    window._AMapSecurityConfig = {
+      securityJsCode: "68c811a338b080365092dc12d566930a",
+    };
+  </script>
+  <script type="text/javascript">
+    var points = [];
+    var isDrawing = false;
+    var isCircle = false;
+    var startMarker, endMarker;
+    var canvasMap;
+    const line1 = [[103.996075, 30.554305], [103.995774, 30.554773], [103.995457, 30.555124], [103.995095, 30.555592], [103.994778, 30.556124], [103.994657, 30.556787], [103.994733, 30.557333], [103.994974, 30.557918], [103.995155, 30.558398], [103.995336, 30.558905], [103.995759, 30.559217], [103.996709, 30.559659], [103.997268, 30.55975], [103.997856, 30.559776], [103.998716, 30.559879], [103.999516, 30.560035], [104.00033, 30.560273], [104.001044, 30.560426], [104.001657, 30.560282], [104.002126, 30.559898], [104.00246, 30.559533], [104.002761, 30.559091], [104.003163, 30.558688], [104.003743, 30.558419], [104.004189, 30.558198], [104.004568, 30.558044], [104.004936, 30.557843], [104.00526, 30.557497], [104.005572, 30.55717], [104.005829, 30.556911], [104.006074, 30.556604], [104.006319, 30.556316], [104.006431, 30.556181], [104.005706, 30.555749], [104.005193, 30.555413], [104.004825, 30.555144], [104.0042, 30.554798], [104.003877, 30.554577], [104.003576, 30.554817], [104.003419, 30.555048], [104.003174, 30.555278], [104.003096, 30.555374], [104.002583, 30.555057], [104.002148, 30.554788], [104.001668, 30.554712], [104.001479, 30.554721], [104.001222, 30.554587], [104.001122, 30.554913], [104.000999, 30.555259], [104.000932, 30.555528], [104.000809, 30.555826], [104.000658, 30.556286], [104.000125, 30.555827], [103.999927, 30.555768], [103.999805, 30.555755], [103.999348, 30.555656], [103.998975, 30.555578], [103.998602, 30.555486], [103.998122, 30.555374], [103.997657, 30.555263], [103.997223, 30.555178], [103.996766, 30.555066], [103.996431, 30.554994], [103.996172, 30.554948], [103.996188, 30.55483]];
+    const line2 = [[103.99694, 30.552687], [103.996868, 30.552888], [103.996842, 30.553062], [103.996758, 30.553235], [103.996753, 30.55335], [103.996692, 30.553494], [103.996689, 30.553603], [103.996732, 30.553715], [103.996787, 30.553792], [103.996908, 30.553866], [103.997021, 30.553876], [103.997156, 30.553906], [103.997249, 30.553864], [103.997356, 30.553794], [103.997474, 30.55366], [103.997497, 30.553524], [103.997534, 30.553355], [103.997589, 30.553218], [103.997632, 30.553004], [103.997696, 30.55288], [103.997702, 30.552744], [103.997621, 30.552602], [103.997511, 30.552513], [103.997381, 30.55248], [103.997217, 30.55248], [103.997056, 30.55253], [103.996986, 30.55258]];
+    const line3 = [[104.005846, 30.557112], [104.005801, 30.557029], [104.005958, 30.556868], [104.006204, 30.556543], [104.006466, 30.556263], [104.006694, 30.555999], [104.006802, 30.555938], [104.006936, 30.555925], [104.00703, 30.55597], [104.007333, 30.556167], [104.007583, 30.55635], [104.00777, 30.556443], [104.007829, 30.556517], [104.007859, 30.55663], [104.007729, 30.556775], [104.007594, 30.556929], [104.007452, 30.557106], [104.007273, 30.55726], [104.007161, 30.557402], [104.00706, 30.557553], [104.00694, 30.557659], [104.00688, 30.557701], [104.006738, 30.557708], [104.006555, 30.557572], [104.006354, 30.557437], [104.006137, 30.557309], [104.005973, 30.557209]];
+    document.addEventListener("DOMContentLoaded", function() {
+      canvasMap = document.getElementsByClassName("amap-layer")[0];
+    });
+    var marker, map = new AMap.Map("container", {
+      viewMode: '2D', //默认使用 2D 模式
+      zoom: 16, //地图级别
+      center: [104.000094, 30.557774], //地图中心点
+      mapStyle: "amap://styles/normal", //设置地图的显示样式
+    });
+    // 创建起点终点的 Icon
+    var startIcon = new AMap.Icon({
+      size: new AMap.Size(25, 34), // 图标尺寸
+      image: 'https://a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png',
+      imageSize: new AMap.Size(135, 40), // 图标所用图片大小
+      imageOffset: new AMap.Pixel(-9, -3) // 图标取图偏移量
+    });
+    var endIcon = new AMap.Icon({
+      size: new AMap.Size(25, 34),
+      image: 'https://a.amap.com/jsapi_demos/static/demo-center/icons/dir-marker.png',
+      imageSize: new AMap.Size(135, 40),
+      imageOffset: new AMap.Pixel(-95, -3)
+    });
+    // 路线图
+    const polyline = new AMap.Polyline({
+      path: [[0, 0]], // 设置线覆盖物路径
+      strokeColor: "#f92472", // 线颜色
+      strokeWeight: 5, // 线宽
+      strokeStyle: "solid", // 线样式
+      lineJoin: "round", // 折线拐点连接处样式
+    });
+    map.add(polyline);
+    // 点击地图事件
+    map.on('click', function(e) {
+      let position = e.lnglat; // 获取点击位置的经纬度坐标
+      if (isDrawing) {
+        points.push([position.lng, position.lat])
+        console.log(JSON.stringify(points)) // 显示经纬度坐标
+        if (points.length === 1) {
+          startMarker = new AMap.Marker({
+            position: points[0],
+            icon: startIcon,
+            offset: new AMap.Pixel(-13, -30),
+            title: "起点",
+          });
+          map.add(startMarker);
+        } else {
+          polyline.setPath(points);
+          polyline.show();
+        }
+      }
+    });
+
+    function startDrawing() {
+      points = [];
+      isDrawing = true;
+      isCircle = false;
+      polyline.hide();
+      if (endMarker != undefined) {
+        map.remove(endMarker);
+      }
+      if (startMarker != undefined) {
+        map.remove(startMarker);
+      }
+      canvasMap.classList.add("drawing");
+    }
+
+    function endDrawing() {
+      if (points.length === 0) {
+        return;
+      }
+      if (isCircle) {
+        points.pop();
+        polyline.setPath(points);
+        polyline.show();
+        isCircle = false;
+        isDrawing = false;
+      }
+      if (endMarker === undefined) {
+        endMarker = new AMap.Marker({
+          position: points[points.length - 1],
+          icon: endIcon,
+          offset: new AMap.Pixel(-13, -30),
+          title: "终点",
+        });
+        map.add(endMarker);
+      }
+      canvasMap.classList.remove("drawing");
+    }
+
+    function endCircle() {
+      if (points.length === 0) {
+        return;
+      }
+      if (endMarker != undefined) {
+        map.remove(endMarker);
+      }
+      endMarker = undefined;
+      if (!isCircle) {
+        points.push(points[0]);
+        polyline.setPath(points);
+        polyline.show();
+        isCircle = true;
+        isDrawing = false;
+      }
+      canvasMap.classList.remove("drawing");
+    }
+
+    function startRunning() {
+      var data = { pointList: points, isCircle: isCircle };
+      fetch('/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).then(response => {
+        console.log('response:', response);
+      }).catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+
+    function setLine(_points, _isCircle) {
+      startDrawing();
+      points = _points;
+      startMarker = new AMap.Marker({
+        position: points[0],
+        icon: startIcon,
+        offset: new AMap.Pixel(-13, -30),
+        title: "起点",
+      });
+      map.add(startMarker);
+      isCircle = false;
+      polyline.setPath(points);
+      polyline.show();
+      isCircle = _isCircle;
+      if (_isCircle) {
+        endCircle();
+      } else {
+        endDrawing();
+      }
+    }
+  </script>
+</body>
+
+</html>

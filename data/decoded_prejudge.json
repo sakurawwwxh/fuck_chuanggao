@@ -1,0 +1,151 @@
+{
+    "activeTime": "00:21:46",
+    "alreadyPassPoint": "",
+    "alreadyPassPointResult": "",
+    "avgPace": "07\u002703\u0027\u0027",
+    "avgSpeed": "8.5",
+    "beginTime": "2024-03-03 21:26:12",
+    "calorie": 175.7,
+    "endTime": "2024-03-03 21:48:02",
+    "indoor": 0,
+    "isValid": 1,
+    "isValidReason": "",
+    "lastOdometerTime": "00:00:25",
+    "maxSpeedPerHour": "17",
+    "minSpeedPerHour": "1.17",
+    "minuteSpeed": [
+        {
+            "min": "1",
+            "v": "9.54",
+            "baseObjId": 63
+        },
+        {
+            "min": "2",
+            "v": "12.42",
+            "baseObjId": 64
+        },
+        {
+            "min": "3",
+            "v": "12.56",
+            "baseObjId": 65
+        },
+        {
+            "min": "4",
+            "v": "12.02",
+            "baseObjId": 66
+        },
+        {
+            "min": "5",
+            "v": "10.26",
+            "baseObjId": 67
+        },
+        {
+            "min": "6",
+            "v": "10.44",
+            "baseObjId": 68
+        },
+        {
+            "min": "7",
+            "v": "9.65",
+            "baseObjId": 69
+        },
+        {
+            "min": "8",
+            "v": "0.0",
+            "baseObjId": 70
+        },
+        {
+            "min": "9",
+            "v": "0.0",
+            "baseObjId": 71
+        },
+        {
+            "min": "10",
+            "v": "0.0",
+            "baseObjId": 72
+        },
+        {
+            "min": "11",
+            "v": "0.0",
+            "baseObjId": 73
+        },
+        {
+            "min": "12",
+            "v": "6.55",
+            "baseObjId": 74
+        },
+        {
+            "min": "13",
+            "v": "13.32",
+            "baseObjId": 75
+        },
+        {
+            "min": "14",
+            "v": "10.58",
+            "baseObjId": 76
+        },
+        {
+            "min": "15",
+            "v": "11.16",
+            "baseObjId": 77
+        },
+        {
+            "min": "16",
+            "v": "4.32",
+            "baseObjId": 78
+        },
+        {
+            "min": "17",
+            "v": "11.38",
+            "baseObjId": 79
+        },
+        {
+            "min": "18",
+            "v": "3.64",
+            "baseObjId": 80
+        },
+        {
+            "min": "19",
+            "v": "11.92",
+            "baseObjId": 81
+        },
+        {
+            "min": "20",
+            "v": "9.43",
+            "baseObjId": 82
+        },
+        {
+            "min": "21",
+            "v": "10.66",
+            "baseObjId": 83
+        }
+    ],
+    "modementMode": "2",
+    "name": "胡宗尧",
+    "needPassPointCount": "0",
+    "odometer": "3.09",
+    "pace": [
+        {
+            "km": "1",
+            "t": "05\u002704\u0027\u0027",
+            "baseObjId": 8
+        },
+        {
+            "km": "2",
+            "t": "09\u002745\u0027\u0027",
+            "baseObjId": 9
+        },
+        {
+            "km": "3",
+            "t": "06\u002731\u0027\u0027",
+            "baseObjId": 10
+        }
+    ],
+    "phoneVersion": "23078RKD5C,33,13|2.9.8",
+    "planRouteName": "江安校区",
+    "routeId": "24",
+    "sportId": "4f72863b-1ca5-47a3-8deb-ef049e13b1c8",
+    "stepCount": 564,
+    "stepMinute": "25.91",
+    "xh": "2022181640245"
+}
