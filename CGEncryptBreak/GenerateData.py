@@ -16,6 +16,10 @@ p2: (30.555866,104.006818).(30.555935,104.00685) -> (30.5559005,104.006834)
 p3: (30.556526,104.007821).(30.556623,104.00789) -> (30.5565745,104.0078555)
 p4: (30.557713,104.006802).(30.557778,104.006861) -> (30.5577455,104.0068315)
 """
+default_point_list = [
+    (30.557071, 104.005804), (30.5559005, 104.006834),
+    (30.5565745, 104.0078555), (30.5577455, 104.0068315),
+]
 
 jsonsport_template = {
     "activeTime": "",  # 跑步总耗时
@@ -146,7 +150,7 @@ def timestamp2string(timestamp):
     dt_object = datetime.datetime.fromtimestamp(timestamp)
     # 将日期时间对象格式化为指定的字符串格式
     formatted_date_time = dt_object.strftime("%Y-%m-%d %H:%M:%S")
-    print(formatted_date_time)
+    # print(formatted_date_time)
     return formatted_date_time
 
 
@@ -157,7 +161,7 @@ def generate_random_position(pos_a, pos_o, diff_a, diff_o):
     return round(rand_pos_a, 6), round(rand_pos_o, 6)  # 保留6位小数
 
 
-def generate_jsonsport():
+def generate_jsonsport(point_list=default_point_list, is_circle=True):
     """生成用于/api/l/v7/savesports接口的随机数据"""
     jsonsport = jsonsport_template.copy()
 
@@ -190,11 +194,8 @@ def generate_jsonsport():
     # ############# 动态参数 ############# #
     pace = [0]  # pace[n] 指的是第n公里结束时花的时间
     minu_dis = [0]  # mimu_dis[n] 指的是第n分钟结束时跑完的路程
-    minu_time = [0]  # minu_time[n] 指的是第n分钟结束时经过的时间
-    point_list = [
-        (30.557071, 104.005804), (30.5559005, 104.006834),
-        (30.5565745, 104.0078555), (30.5577455, 104.0068315),
-    ] * 20  # 绕1号运动场跑5圈
+    if is_circle:  # 循环跑100圈总归有3公里了吧？
+        point_list = point_list * 100
     began_point = generate_random_position(*point_list[0], 0.000032, 0.000016)
     end_point = generate_random_position(*point_list[-1], 0.000032, 0.000016)
     # 按时间先后: 开始 -> 3s后 -> 记录运动 -> 结束运动 -> 3s后(网络延迟) -> 提交
@@ -224,16 +225,19 @@ def generate_jsonsport():
     for i in range(len(point_list) - 1):
         if finished:
             break
+        # rough_speed = rough_odometer * 2.7  # 保证跑大约20分钟
         rough_speed = 9 + random.random()  # 慢跑最佳速度 10km/h, 6min/km
         # 计算与下一个点之间的距离, 距离单位为米
         pp_distance = geodesic(point_list[i], point_list[i + 1]).meters
         # 如果按照speed跑的话, 需要大概分割成多少段 (每段~2 second)
         # point_count = pp_distance / (rough_speed / 3.6) / 2
-        point_count = pp_distance / rough_speed * 1.8
+        point_count = int(pp_distance / rough_speed * 1.8)
+        if point_count == 0:
+            point_count = 1  # 防止 ZeroDivisionError: float division by zero
         # 计算每两点之间的经纬度间隔
         delta_a = (point_list[i + 1][0] - point_list[i][0]) / point_count
         delta_o = (point_list[i + 1][1] - point_list[i][1]) / point_count
-        for j in range(1, int(point_count)):
+        for j in range(int(point_count)):
             rand_point = generate_random_position(
                 point_list[i][0] + delta_a * j,
                 point_list[i][1] + delta_o * j,
@@ -265,12 +269,10 @@ def generate_jsonsport():
                 pace.append(0)
             if minute_cnt >= len(minu_dis):
                 minu_dis.append(0)
-                minu_time.append(0)
             pace[km_count] = time_all  # 单位: ms
             minu_dis[minute_cnt] = int(distance_all)  # 单位: m
-            minu_time[minute_cnt] = time_all  # 单位: ms
             last_point = rand_point
-            if distance_all >= rough_odometer * 1000:  # 跑完了
+            if is_circle and distance_all >= rough_odometer * 1000:  # 跑完了
                 finished = True
                 end_point = rand_point
                 submit_time = round(time.time() * 1000)
@@ -280,6 +282,16 @@ def generate_jsonsport():
                 # 减掉开始时的倒计时 (3s)
                 start_time = begin_time - 3000
                 break
+    # 路线都结束了还没跑完, 只能强行结束了
+    if not finished:
+        end_point = rand_point
+        submit_time = round(time.time() * 1000)
+        # 减掉网络延迟产生的时间误差
+        end_time = submit_time - round(random.random() * 3000)
+        begin_time = end_time - time_all
+        # 减掉开始时的倒计时 (3s)
+        start_time = begin_time - 3000
+
     # 运动总路程
     odometer = (distance + distance_all) / 1000  # 不知道为啥这么算, 创高的bug
     jsonsport['odometer'] = f"{round(odometer, 2):.2f}"  # 精确到小数点后两位
@@ -292,19 +304,22 @@ def generate_jsonsport():
     # 拟合出来的卡路里计算公式
     jsonsport['calorie'] = round(57.0949 * odometer - 1.1293, 1)
     # 步幅 & 步数 & 每分钟步数
-    step_length = 1.5 + random.random() * 0.2  # 正常人跑步步幅在1米~1.2米左右
+    step_length = 2 + random.random() * 0.2  # 正常人跑步步幅在1米~1.2米左右
     jsonsport['stepCount'] = round(odometer * 1000 / step_length)
+    # 实测，stepMinute >= 100 时很容易报参数错误
     jsonsport['stepMinute'] = str(round(
         jsonsport['stepCount'] / (time_all // 1000) * 60, 2))
-    # 最大最小时速, 注意要精确到小数点后两位
-    jsonsport['maxSpeedPerHour'] = f"{round(max_speed, 2):.2f}"
-    jsonsport['minSpeedPerHour'] = f"{round(min_speed, 2):.2f}"
+    # 最大最小时速
+    jsonsport['maxSpeedPerHour'] = str(round(max_speed, 2))
+    jsonsport['minSpeedPerHour'] = str(round(min_speed, 2))
     # 总耗时 和 最后不到一公里耗时
     jsonsport["activeTime"] = milliseconds_to_time(time_all)
     jsonsport['lastOdometerTime'] = milliseconds_to_time(pace[-1] - pace[-2])
     # 每公里平均用时 和 平均速度
     seconds = round((time_all // 1000) / odometer)
-    jsonsport["avgPace"] = f"{seconds // 60}\u0027{seconds % 60}\u0027\u0027"
+    minute = str(seconds // 60).zfill(2)
+    second = str(seconds % 60).zfill(2)
+    jsonsport["avgPace"] = f"{minute}\u0027{second}\u0027\u0027"
     jsonsport["avgSpeed"] = str(round(odometer / (time_all // 1000) * 3600, 1))
     # 将时间间隔转化为 timestamp 时间戳
     for p in jsonsport['coordinate']:
@@ -322,13 +337,16 @@ def generate_jsonsport():
         })
     # 计算每分钟内的平均速度, 最后一分钟不需要上传
     for m in range(1, minute_cnt):
-        s = (minu_dis[m]-minu_dis[m-1])/(minu_time[m]-minu_time[m-1])*3600
+        # 计算每分钟的 speed, 这里一分钟按60秒算, 有误差不管了
+        s = (minu_dis[m] - minu_dis[m - 1]) * 0.06
         jsonsport['minuteSpeed'].append({
             "min": str(m),  # 第几分钟
             "v": str(round(s, 2))
         })
     # print("pace:", pace)
     # print("minute_dis:", minu_dis)
+
+    # 计算上传到 prejudgement 的 jsonsports, 少几个参数
     prejudge_jsonsport = jsonsport.copy()
     prejudge_jsonsport.pop("coordinate", None)
     prejudge_jsonsport.pop("beganPoint", None)

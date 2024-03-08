@@ -13,16 +13,23 @@ jvm_path = jpype.getDefaultJVMPath()
 jpype.startJVM(jvm_path, "-ea", "-Djava.class.path=%s" % (jar_path))
 
 
+def json_dump(data):
+    """特殊的json转字符串的方式: 不加空格, 而且没有中文字符"""
+    return json.dumps(data, separators=(',', ':'), ensure_ascii=True)
+
+
 def get_sign(interface, secret, jsonsport):
     # 通过包名, 实例化JAVA对象 括号内的是包名 后面的是类名+直接实例化
     crack_encrypt_class = jpype.JClass("com.cgencrypt.crack.crackEncrypt")
-    apiUrl = interface + "?jsonsports="
-    if interface == "/api/l/v6.1/prejudgment" or interface == "/api/l/v7/savesports":
+    api_url = interface + "?jsonsports="
+    jsonsport_str = json_dump(jsonsport)
+    print(jsonsport_str)
+    if interface in ["/api/l/v6.1/prejudgment", "/api/l/v7/savesports"]:
         enc_secret = secret[:16].encode()
-        arg2 = apiUrl + Encrypt.aes_encrypt(json.dumps(jsonsport), enc_secret)
+        arg2 = api_url + Encrypt.aes_encrypt(jsonsport_str, enc_secret)
     else:
-        arg2 = apiUrl + Encrypt.get_enc_pwd(json.dumps(jsonsport))
+        arg2 = api_url + Encrypt.get_enc_pwd(jsonsport_str)
     calculator = crack_encrypt_class(secret, arg2)  # 传入所需参数
-    encyptStr = str(calculator.calc())
+    encypted_str = str(calculator.calc())
 
-    return encyptStr.split("|")
+    return encypted_str.split("|")

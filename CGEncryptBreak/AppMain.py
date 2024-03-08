@@ -1,5 +1,5 @@
 from datetime import timedelta
-from GenerateData2 import generate_jsonsport
+from GenerateData import generate_jsonsport
 from flask import Flask, request, render_template, jsonify
 import os
 import sys
@@ -34,7 +34,7 @@ def strToCookie(cookies_str):
 
 @app.route('/', methods=["POST", "GET"])
 def index():
-    return render_template("index.html", key="262b7e1b2838bb6efc7e6f1e6e11a2a6")
+    return render_template("index.html")
 
 
 @app.route('/run', methods=["POST"])

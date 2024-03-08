@@ -29,6 +29,7 @@
   <div class="input-card" style="width: auto;">
     <div class="input-item">
       <button class="btn" onclick="startDrawing()">开始绘制</button>
+      <button class="btn" style="margin-left: 10px;" onclick="redraw()">撤回</button>
     </div>
     <div class="input-item">
       <button class="btn" onclick="endDrawing()">结束绘制 (开环路线)</button>
@@ -51,7 +52,7 @@
       <button class="btn" onclick="startRunning()">开始运动</button>
     </div>
   </div>
-  <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key={{ key }}"></script>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=262b7e1b2838bb6efc7e6f1e6e11a2a6"></script>
   <script type="text/javascript" src="https://webapi.amap.com/loader.js"></script>
   <script type="text/javascript">
     window._AMapSecurityConfig = {
@@ -185,6 +186,12 @@
       }).catch((error) => {
         console.error('Error:', error);
       });
+    }
+
+    function redraw() {
+      points.pop();
+      polyline.setPath(points);
+      polyline.show();
     }
 
     function setLine(_points, _isCircle) {

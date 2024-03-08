@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from urllib.parse import urlparse, urlencode, quote
+from CGEnrypt import get_sign, json_dump
 import json
 import requests
-from urllib.parse import urlparse, urlencode, quote
 import time
 import Encrypt
-import CGEnrypt
 import DataManager
 
 # 根url
@@ -23,6 +23,7 @@ org_headers = {
 
 
 def login_req(data, token):
+    """用户登录请求"""
     sorted_data = dict(
         sorted(data.items(), key=lambda d: str(d[1]), reverse=True))
     data_str = urlencode(sorted_data)
@@ -44,14 +45,13 @@ def login_req(data, token):
 def prejudge_req(jsonsports, token, secret):
     interface = '/api/l/v6/prejudgment'
     full_url = main_url + interface
-    _, timestamp, _, sign = CGEnrypt.get_sign(interface, secret, jsonsports)
+    _, timestamp, _, sign = get_sign(interface, secret, jsonsports)
 
     org_headers['Host'] = urlparse(full_url).netloc
     org_headers['sign'] = sign
     org_headers['timestamp'] = timestamp
     org_headers['cgAuthorization'] = token if token else ''
-
-    jsonsports_enc = Encrypt.get_enc_pwd(json.dumps(jsonsports))
+    jsonsports_enc = Encrypt.get_enc_pwd(json_dump(jsonsports))
     data = {'jsonsports': quote(jsonsports_enc)}
     # print(jsonsports_enc)
     res = requests.post(full_url, data=data, headers=org_headers)
@@ -61,15 +61,14 @@ def prejudge_req(jsonsports, token, secret):
 def prejudge_req_new(jsonsports, token, secret):
     interface = '/api/l/v6.1/prejudgment'
     full_url = main_url + interface
-    _, timestamp, _, sign = CGEnrypt.get_sign(interface, secret, jsonsports)
+    _, timestamp, _, sign = get_sign(interface, secret, jsonsports)
 
     org_headers['Host'] = urlparse(full_url).netloc
     org_headers['sign'] = sign
     org_headers['timestamp'] = timestamp
     org_headers['cgAuthorization'] = token if token else ''
     enc_secret = secret[:16].encode()
-    print(json.dumps(jsonsports))
-    jsonsports_enc = Encrypt.aes_encrypt(json.dumps(jsonsports), enc_secret)
+    jsonsports_enc = Encrypt.aes_encrypt(json_dump(jsonsports), enc_secret)
     data = {'jsonsports': quote(jsonsports_enc)}
     # print(jsonsports_enc)
     res = requests.post(full_url, data=data, headers=org_headers)
@@ -79,15 +78,14 @@ def prejudge_req_new(jsonsports, token, secret):
 def savesports_req(jsonsports, token, secret):
     interface = '/api/l/v7/savesports'
     full_url = main_url + interface
-    _, timestamp, _, sign = CGEnrypt.get_sign(interface, secret, jsonsports)
+    _, timestamp, _, sign = get_sign(interface, secret, jsonsports)
 
     org_headers['Host'] = urlparse(full_url).netloc
     org_headers['sign'] = sign
     org_headers['timestamp'] = timestamp
     org_headers['cgAuthorization'] = token if token else ''
     enc_secret = secret[:16].encode()
-    print(json.dumps(jsonsports))
-    jsonsports_enc = Encrypt.aes_encrypt(json.dumps(jsonsports), enc_secret)
+    jsonsports_enc = Encrypt.aes_encrypt(json_dump(jsonsports), enc_secret)
     data = {'jsonsports': quote(jsonsports_enc)}
     # print(jsonsports_enc)
     res = requests.post(full_url, data=data, headers=org_headers)
