@@ -43,8 +43,6 @@ def run():
     data = request.get_json()
     point_list = data["pointList"]
     is_circle = data["isCircle"]
-    if is_circle:
-        point_list.pop()
     for i in range(len(point_list)):
         point_list[i] = (point_list[i][1], point_list[i][0])
     print("get points:", point_list)
@@ -54,10 +52,11 @@ def run():
     print(prejudge_resp)
     if DataManager.check_is_valid(prejudge_resp):
         print("prejudge 检验成功, 上传数据...")
-        # savesports_resp = HttpReq.savesports_req(
-        #     jsonsports, user_info['token'], user_info['secret'])
-        # print(savesports_resp)
-        # return savesports_resp
+        if input("确定上传吗？y:上传;n:取消：") == "y":
+            savesports_resp = HttpReq.savesports_req(
+                jsonsports, user_info['token'], user_info['secret'])
+        print(savesports_resp)
+        return savesports_resp
 
     return {"code": 400, "msg": "prejudge 检验失败"}
 
