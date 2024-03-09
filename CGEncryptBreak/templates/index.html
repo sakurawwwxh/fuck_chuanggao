@@ -6,8 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
   <title>创高fucker</title>
-  <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
-  <!-- <script src='https://a.amap.com/jsapi_demos/static/citys.js'></script> -->
+  <!-- Material Design Lite -->
+  <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <!-- Material Design icon font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- Icons -->
+  <link rel="icon" href="./favicon.ico" />
   <style>
     html,
     body,
@@ -21,35 +26,239 @@
     #container canvas.drawing {
       cursor: crosshair;
     }
+
+    .input-item .material-icons {
+      font-size: 0.7rem;
+      margin-right: 0.2rem;
+    }
+
+    .loginForm {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background-image: white;
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    .loginForm .hidden {
+      visibility: hidden;
+    }
+
+    .loginForm .material-icons {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    /* 下面是amap demo中的内容 */
+
+    .input-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #fff;
+      background-clip: border-box;
+      border-radius: .25rem;
+      width: 22rem;
+      border-width: 0;
+      border-radius: 0.4rem;
+      box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+      padding: 0.75rem 1.25rem;
+    }
+
+    .input-item {
+      position: relative;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -ms-flex-align: center;
+      align-items: center;
+      width: 100%;
+      height: 3rem;
+    }
+
+    .input-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .input-item>select,
+    .input-item>input[type=text],
+    .input-item>input[type=date] {
+      position: relative;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+      width: 1%;
+      margin-bottom: 0;
+    }
+
+    .input-item>select:not(:last-child),
+    .input-item>input[type=text]:not(:last-child),
+    .input-item>input[type=date]:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0
+    }
+
+    .input-item>select:not(:first-child),
+    .input-item>input[type=text]:not(:first-child),
+    .input-item>input[type=date]:not(:first-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0
+    }
+
+    .input-item-prepend {
+      margin-right: -1px;
+    }
+
+    .input-item-text,
+    input[type=text],
+    input[type=password],
+    select {
+      height: calc(2rem);
+    }
+
+    .input-item-text {
+      width: 6rem;
+      text-align: justify;
+      padding: 0.4rem 0.7rem;
+      display: inline-block;
+      text-justify: distribute-all-lines;
+      /*ie6-8*/
+      text-align-last: justify;
+      /* ie9*/
+      -moz-text-align-last: justify;
+      /*ff*/
+      -webkit-text-align-last: justify;
+      /*chrome 20+*/
+      -ms-flex-align: center;
+      align-items: center;
+      margin-bottom: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #495057;
+      text-align: center;
+      white-space: nowrap;
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    .input-item-text input[type=checkbox],
+    .input-item-text input[type=radio] {
+      margin-top: 0
+    }
+
+    .btn {
+      display: inline-block;
+      font-weight: 400;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border: 1px solid transparent;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+      background-color: transparent;
+      background-image: none;
+      color: #25A5F7;
+      border-color: #25A5F7;
+      padding: .25rem .5rem;
+      line-height: 1.5;
+      border-radius: 1rem;
+      -webkit-appearance: button;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      color: #fff;
+      background-color: #25A5F7;
+      border-color: #25A5F7
+    }
+
+    .btn:hover {
+      text-decoration: none
+    }
   </style>
 </head>
 
 <body>
+  <form class="loginForm" action="/" method="post">
+    <div class="inputForm" style="margin-top: 20%;">
+      <span class="material-icons">perm_identity</span>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" name="studID" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="studID_id">
+        <label class="mdl-textfield__label" for="studID_id">你的学号</label>
+        <span class="mdl-textfield__error">请输入一个数字！</span>
+      </div>
+    </div>
+    <div class="inputForm">
+      <span class="material-icons">key</span>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" name="passwd" type="password" id="passwd_id">
+        <label class="mdl-textfield__label" for="passwd_id">创高密码（默认为学号后6位）</label>
+      </div>
+    </div>
+    <button onclick="showMsg()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+      登录
+    </button>
+  </form>
   <div id="container"></div>
+  <div id="errorMsgToast" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+  </div>
   <div class="input-card" style="width: auto;">
     <div class="input-item">
-      <button class="btn" onclick="startDrawing()">开始绘制</button>
-      <button class="btn" style="margin-left: 10px;" onclick="redraw()">撤回</button>
+      <button class="btn" onclick="startDrawing()">
+        <span class="material-icons">mode_edit</span><span>开始绘制</span>
+      </button>
+      <button class="btn" style="margin-left: 0.5rem;" onclick="redraw()">
+        <span class="material-icons">undo</span><span>撤回</span>
+      </button>
     </div>
     <div class="input-item">
-      <button class="btn" onclick="endDrawing()">结束绘制 (开环路线)</button>
+      <button class="btn" onclick="endDrawing()">
+        <span class="material-icons">sports_score</span><span>结束绘制 (开环路线)</span>
+      </button>
     </div>
     <div class="input-item">
-      <button class="btn" onclick="endCircle()">结束绘制 (路线闭合)</button>
-    </div>
-    <hr />
-    <div class="input-item">
-      <button class="btn" onclick="setLine(line1, false)">经典线路1</button>
-    </div>
-    <div class="input-item">
-      <button class="btn" onclick="setLine(line2, true)">经典线路2</button>
-    </div>
-    <div class="input-item">
-      <button class="btn" onclick="setLine(line3, true)">经典线路3</button>
+      <button class="btn" onclick="endCircle()">
+        <span class="material-icons">autorenew</span><span>结束绘制 (路线闭合)</span>
+      </button>
     </div>
     <hr />
     <div class="input-item">
-      <button class="btn" onclick="startRunning()">开始运动</button>
+      <button class="btn" onclick="setLine(line1, false)">
+        <span class="material-icons">route</span><span>经典线路1</span>
+      </button>
+    </div>
+    <div class="input-item">
+      <button class="btn" onclick="setLine(line2, true)">
+        <span class="material-icons">route</span><span>经典线路2</span>
+      </button>
+    </div>
+    <div class="input-item">
+      <button class="btn" onclick="setLine(line3, true)">
+        <span class="material-icons">route</span><span>经典线路3</span>
+      </button>
+    </div>
+    <hr />
+    <div class="input-item">
+      <button class="btn" onclick="startRunning()">
+        <span class="material-icons">not_started</span><span>开始运动</span>
+      </button>
     </div>
   </div>
   <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=262b7e1b2838bb6efc7e6f1e6e11a2a6"></script>
@@ -66,8 +275,8 @@
     var isDrawing = false;
     // 是否定义为循环路线
     var isCircle = false;
-    // html 页面中的主要元素
-    var canvasMap;
+    // html 页面中的元素
+    var canvasMap, loginForm, snackbarContainer;
     // 定义 marker 和 map
     var marker, map = new AMap.Map("container", {
       viewMode: '2D', // 默认使用 2D 模式
@@ -110,28 +319,59 @@
       lineJoin: "round", // 折线拐点连接处样式
     });
     // 定义三条经典路线
-    const line1 = [[103.996075, 30.554305], [103.995774, 30.554773], [103.995457, 30.555124], [103.995095, 30.555592], [103.994778, 30.556124], [103.994657, 30.556787], [103.994733, 30.557333], [103.994974, 30.557918], [103.995155, 30.558398], [103.995336, 30.558905], [103.995759, 30.559217], [103.996709, 30.559659], [103.997268, 30.55975], [103.997856, 30.559776], [103.998716, 30.559879], [103.999516, 30.560035], [104.00033, 30.560273], [104.001044, 30.560426], [104.001657, 30.560282], [104.002126, 30.559898], [104.00246, 30.559533], [104.002761, 30.559091], [104.003163, 30.558688], [104.003743, 30.558419], [104.004189, 30.558198], [104.004568, 30.558044], [104.004936, 30.557843], [104.00526, 30.557497], [104.005572, 30.55717], [104.005829, 30.556911], [104.006074, 30.556604], [104.006319, 30.556316], [104.006431, 30.556181], [104.005706, 30.555749], [104.005193, 30.555413], [104.004825, 30.555144], [104.0042, 30.554798], [104.003877, 30.554577], [104.003576, 30.554817], [104.003419, 30.555048], [104.003174, 30.555278], [104.003096, 30.555374], [104.002583, 30.555057], [104.002148, 30.554788], [104.001668, 30.554712], [104.001479, 30.554721], [104.001222, 30.554587], [104.001122, 30.554913], [104.000999, 30.555259], [104.000932, 30.555528], [104.000809, 30.555826], [104.000658, 30.556286], [104.000125, 30.555827], [103.999927, 30.555768], [103.999805, 30.555755], [103.999348, 30.555656], [103.998975, 30.555578], [103.998602, 30.555486], [103.998122, 30.555374], [103.997657, 30.555263], [103.997223, 30.555178], [103.996766, 30.555066], [103.996431, 30.554994], [103.996172, 30.554948], [103.996188, 30.55483]];
-    const line2 = [[103.99692, 30.55268], [103.996891, 30.552789], [103.996857, 30.55286], [103.996846, 30.552936], [103.996814, 30.553025], [103.996804, 30.553093], [103.99677, 30.553179], [103.996766, 30.553266], [103.996738, 30.553334], [103.996722, 30.553412], [103.996698, 30.553492], [103.996687, 30.55355], [103.996687, 30.553645], [103.99674, 30.553746], [103.996808, 30.553793], [103.996882, 30.553853], [103.996962, 30.553876], [103.997064, 30.553896], [103.997141, 30.553892], [103.997214, 30.553881], [103.997307, 30.553853], [103.997373, 30.553789], [103.997428, 30.553734], [103.997481, 30.553641], [103.997505, 30.553484], [103.997557, 30.553345], [103.997602, 30.553188], [103.997616, 30.553119], [103.997665, 30.552979], [103.997695, 30.552829], [103.997687, 30.5527], [103.997616, 30.552617], [103.997555, 30.552561], [103.997491, 30.552525], [103.997394, 30.552496], [103.99728, 30.552484], [103.997172, 30.552498], [103.997093, 30.55252], [103.997019, 30.552564], [103.996944, 30.55266], [103.996905, 30.552775], [103.996877, 30.552854], [103.996836, 30.552924], [103.996811, 30.553003], [103.996789, 30.553097], [103.996783, 30.553183], [103.996752, 30.553264], [103.996725, 30.553338], [103.996708, 30.553399], [103.996693, 30.553467], [103.996679, 30.553529], [103.996678, 30.553607], [103.996706, 30.55366], [103.996732, 30.553711], [103.996761, 30.553749], [103.996807, 30.553804], [103.996891, 30.553842], [103.996945, 30.553861], [103.997016, 30.553879], [103.997098, 30.553886], [103.997173, 30.553876], [103.997243, 30.553865], [103.997296, 30.553843], [103.99733, 30.553817], [103.997363, 30.553788], [103.997401, 30.553749], [103.99743, 30.553703], [103.997452, 30.553648], [103.997464, 30.553608], [103.997479, 30.553548], [103.997484, 30.553516], [103.997512, 30.553438], [103.997539, 30.553371], [103.99756, 30.553302], [103.99757, 30.553229], [103.997597, 30.553168], [103.997618, 30.553077], [103.997637, 30.553037], [103.997652, 30.55296], [103.997662, 30.552925], [103.99768, 30.552853], [103.997682, 30.552786], [103.997676, 30.552732], [103.997665, 30.55269], [103.997641, 30.552625], [103.99759, 30.552574], [103.997538, 30.55254], [103.997491, 30.552513], [103.997413, 30.55249], [103.997316, 30.552475], [103.997235, 30.552478], [103.997169, 30.552483], [103.997108, 30.552505], [103.997033, 30.552545], [103.996996, 30.552574], [103.996976, 30.552603], [103.996948, 30.55264]];
-    const line3 = [[104.005846, 30.557112], [104.005801, 30.557029], [104.005958, 30.556868], [104.006204, 30.556543], [104.006466, 30.556263], [104.006694, 30.555999], [104.006802, 30.555938], [104.006936, 30.555925], [104.00703, 30.55597], [104.007333, 30.556167], [104.007583, 30.55635], [104.00777, 30.556443], [104.007829, 30.556517], [104.007859, 30.55663], [104.007729, 30.556775], [104.007594, 30.556929], [104.007452, 30.557106], [104.007273, 30.55726], [104.007161, 30.557402], [104.00706, 30.557553], [104.00694, 30.557659], [104.00688, 30.557701], [104.006738, 30.557708], [104.006555, 30.557572], [104.006354, 30.557437], [104.006137, 30.557309], [104.005973, 30.557209]];
+    const line1 = "[[103.996075,30.554305],[103.995774,30.554773],[103.995457,30.555124],[103.995095,30.555592],[103.994778,30.556124],[103.994657,30.556787],[103.994733,30.557333],[103.994974,30.557918],[103.995155,30.558398],[103.995336,30.558905],[103.995759,30.559217],[103.996709,30.559659],[103.997268,30.55975],[103.997856,30.559776],[103.998716,30.559879],[103.999516,30.560035],[104.00033,30.560273],[104.001044,30.560426],[104.001657,30.560282],[104.002126,30.559898],[104.00246,30.559533],[104.002761,30.559091],[104.003163,30.558688],[104.003743,30.558419],[104.004189,30.558198],[104.004568,30.558044],[104.004936,30.557843],[104.00526,30.557497],[104.005572,30.55717],[104.005829,30.556911],[104.006074,30.556604],[104.006319,30.556316],[104.006431,30.556181],[104.005706,30.555749],[104.005193,30.555413],[104.004825,30.555144],[104.0042,30.554798],[104.003877,30.554577],[104.003576,30.554817],[104.003419,30.555048],[104.003174,30.555278],[104.003096,30.555374],[104.002583,30.555057],[104.002148,30.554788],[104.001668,30.554712],[104.001479,30.554721],[104.001222,30.554587],[104.001122,30.554913],[104.000999,30.555259],[104.000932,30.555528],[104.000809,30.555826],[104.000658,30.556286],[104.000125,30.555827],[103.999927,30.555768],[103.999805,30.555755],[103.999348,30.555656],[103.998975,30.555578],[103.998602,30.555486],[103.998122,30.555374],[103.997657,30.555263],[103.997223,30.555178],[103.996766,30.555066],[103.996431,30.554994],[103.996172,30.554948],[103.996188,30.55483]]";
+    const line2 = "[[103.99692,30.55268],[103.996891,30.552789],[103.996857,30.55286],[103.996846,30.552936],[103.996814,30.553025],[103.996804,30.553093],[103.99677,30.553179],[103.996766,30.553266],[103.996738,30.553334],[103.996722,30.553412],[103.996698,30.553492],[103.996687,30.55355],[103.996687,30.553645],[103.99674,30.553746],[103.996808,30.553793],[103.996882,30.553853],[103.996962,30.553876],[103.997064,30.553896],[103.997141,30.553892],[103.997214,30.553881],[103.997307,30.553853],[103.997373,30.553789],[103.997428,30.553734],[103.997481,30.553641],[103.997505,30.553484],[103.997557,30.553345],[103.997602,30.553188],[103.997616,30.553119],[103.997665,30.552979],[103.997695,30.552829],[103.997687,30.5527],[103.997616,30.552617],[103.997555,30.552561],[103.997491,30.552525],[103.997394,30.552496],[103.99728,30.552484],[103.997172,30.552498],[103.997093,30.55252],[103.997019,30.552564],[103.996944,30.55266],[103.996905,30.552775],[103.996877,30.552854],[103.996836,30.552924],[103.996811,30.553003],[103.996789,30.553097],[103.996783,30.553183],[103.996752,30.553264],[103.996725,30.553338],[103.996708,30.553399],[103.996693,30.553467],[103.996679,30.553529],[103.996678,30.553607],[103.996706,30.55366],[103.996732,30.553711],[103.996761,30.553749],[103.996807,30.553804],[103.996891,30.553842],[103.996945,30.553861],[103.997016,30.553879],[103.997098,30.553886],[103.997173,30.553876],[103.997243,30.553865],[103.997296,30.553843],[103.99733,30.553817],[103.997363,30.553788],[103.997401,30.553749],[103.99743,30.553703],[103.997452,30.553648],[103.997464,30.553608],[103.997479,30.553548],[103.997484,30.553516],[103.997512,30.553438],[103.997539,30.553371],[103.99756,30.553302],[103.99757,30.553229],[103.997597,30.553168],[103.997618,30.553077],[103.997637,30.553037],[103.997652,30.55296],[103.997662,30.552925],[103.99768,30.552853],[103.997682,30.552786],[103.997676,30.552732],[103.997665,30.55269],[103.997641,30.552625],[103.99759,30.552574],[103.997538,30.55254],[103.997491,30.552513],[103.997413,30.55249],[103.997316,30.552475],[103.997235,30.552478],[103.997169,30.552483],[103.997108,30.552505],[103.997033,30.552545],[103.996996,30.552574],[103.996976,30.552603],[103.996948,30.55264]]";
+    const line3 = "[[104.005812,30.557114],[104.005793,30.55708],[104.005806,30.557041],[104.005862,30.556995],[104.005907,30.55694],[104.005947,30.556897],[104.005976,30.556867],[104.006013,30.556824],[104.006101,30.556728],[104.00618,30.556641],[104.00627,30.556523],[104.006353,30.556449],[104.006464,30.556317],[104.006559,30.556226],[104.006671,30.556082],[104.006782,30.555984],[104.00684,30.555922],[104.00687,30.555922],[104.006947,30.555929],[104.007058,30.556009],[104.007281,30.556141],[104.007509,30.556342],[104.007715,30.556463],[104.007824,30.556536],[104.007869,30.556582],[104.007861,30.556625],[104.007779,30.55671],[104.007684,30.556803],[104.007617,30.556879],[104.007527,30.557013],[104.007442,30.557082],[104.007376,30.557141],[104.007304,30.557221],[104.007243,30.557308],[104.00718,30.557406],[104.007108,30.557475],[104.007013,30.557575],[104.006925,30.557671],[104.00688,30.557717],[104.006798,30.557739],[104.006713,30.557723],[104.006594,30.557644],[104.006504,30.557584],[104.006342,30.557484],[104.006217,30.557376],[104.006077,30.557283],[104.005955,30.557201],[104.005883,30.557144],[104.005829,30.557105],[104.005824,30.557069],[104.005828,30.557036],[104.005866,30.556959],[104.005967,30.556857],[104.006063,30.556748],[104.006169,30.556631],[104.006286,30.556533],[104.00634,30.556444],[104.00645,30.556321],[104.006539,30.556231],[104.006582,30.55618],[104.006639,30.556106],[104.006722,30.556025],[104.006813,30.555938],[104.006876,30.55593],[104.00693,30.555938],[104.00703,30.556011],[104.007154,30.556097],[104.007256,30.556152],[104.007342,30.55622],[104.007425,30.556285],[104.007537,30.556338],[104.007611,30.556386],[104.007744,30.556516],[104.007813,30.556548],[104.007845,30.556593],[104.007837,30.556628],[104.007768,30.556703],[104.00772,30.556744],[104.007656,30.556814],[104.007612,30.556867],[104.00757,30.556927],[104.007537,30.556965],[104.007509,30.557001],[104.007463,30.557043],[104.007386,30.557156],[104.007334,30.55721],[104.007289,30.557271],[104.007215,30.557334],[104.00717,30.557392],[104.00711,30.55746],[104.007051,30.557516],[104.006998,30.557575],[104.006946,30.55763],[104.006894,30.557685],[104.006827,30.557722],[104.006768,30.557713],[104.006695,30.5577],[104.006656,30.557666],[104.006569,30.557605],[104.006478,30.557549],[104.006396,30.557501],[104.006322,30.557454],[104.006207,30.557383],[104.006116,30.557332],[104.00602,30.557275],[104.005943,30.55721],[104.005878,30.557165]]";
 
     function showPath(circled) {
-      if (points.length >= 1) { // 如果存在起点
-        startMarker.setPosition(points[0]);
-        startMarker.show();
+      if (points.length === 0) {
+        startMarker.hide();
+        polyline.hide();
+        return;
       }
-      if (points.length >= 2) { // 两个点及以上
-        if (circled) { // 路线为循环, 显示的时候把起点加上去
-          polyline.setPath([...points, points[0]]);
-        } else { // 路线不是循环
-          polyline.setPath(points);
-        }
-        polyline.show();
+      // 如果存在起点
+      startMarker.setPosition(points[0]);
+      startMarker.show();
+      if (circled) { // 路线为循环, 显示的时候把起点加上去
+        polyline.setPath([...points, points[0]]);
+      } else { // 路线不是循环
+        polyline.setPath(points);
       }
+      polyline.show();
     }
 
     // 当页面完全加载时
     document.addEventListener("DOMContentLoaded", function() {
       canvasMap = document.getElementsByClassName("amap-layer")[0];
+      loginForm = document.getElementsByClassName("loginForm")[0];
+      snackbarContainer = document.querySelector('#errorMsgToast');
+      var loginRetCode = "{{ loginRetCode }}";
+      console.log("loginRetCode:", loginRetCode);
+      var loginRetdata = {
+        "-1": "未知错误！",
+        "0": "登陆成功！欢迎您, {{ name }}同学！",
+        "1": "账号密码错误！",
+        "2": "请填写账号、密码",
+      };
+      if (loginRetCode === "0") {
+        loginForm.classList.add("hidden");
+      } else {
+        loginForm.classList.remove("hidden");
+      }
+      componentHandler.upgradeDom();
+      snackbarContainer.MaterialSnackbar.showSnackbar({ message: loginRetdata[loginRetCode] });
+      // 自动填入账号密码
+      var studID = "{{ studID }}";
+      var passwd = "{{ passwd }}";
+      if (studID != "") {
+        var studIdInput = document.querySelector('#studID_id');
+        studIdInput.parentElement.MaterialTextfield.change(studID);
+      }
+      if (passwd != "") {
+        var passwdInput = document.querySelector('#passwd_id');
+        passwdInput.parentElement.MaterialTextfield.change(passwd);
+      }
+      componentHandler.upgradeDom();
       // 将初始路线图添加到 map 中并隐藏, 以后就不用添加了
       map.add(polyline);
       polyline.hide();
@@ -162,9 +402,7 @@
     }
 
     function endDrawing() {
-      if (points.length === 0) {
-        return;
-      }
+      if (points.length === 0) { return; }
       isCircle = false;
       isDrawing = false;
       showPath(isCircle);
@@ -175,9 +413,7 @@
     }
 
     function endCircle() {
-      if (points.length === 0) {
-        return;
-      }
+      if (points.length === 0) { return; }
       isCircle = true;
       isDrawing = false;
       showPath(isCircle);
@@ -187,22 +423,31 @@
     }
 
     function startRunning() {
+      if (points.length === 0) { return; }
       var data = { pointList: points, isCircle: isCircle };
       fetch('/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-      }).then(response => {
-        console.log('response:', response);
+      }).then(response => response.json()
+      ).then(data => {
+        console.log('response:', data);
+        if (data.code === 200) {
+          snackbarContainer.MaterialSnackbar.showSnackbar({
+            message: "🎉 恭喜！您已成功完成了一次创高（待审核）"
+          })
+        } else {
+          snackbarContainer.MaterialSnackbar.showSnackbar({
+            message: "由于未知错误，刷跑失败。"
+          })
+        }
       }).catch((error) => {
         console.error('Error:', error);
       });
     }
 
     function redraw() {
-      if (points.length === 0) {
-        return;
-      }
+      if (points.length === 0) { return; }
       points.pop(); // 撤回一个点
       endMarker.hide(); // 隐藏终点
       isDrawing = true;
@@ -213,14 +458,22 @@
 
     function setLine(_points, _isCircle) {
       startDrawing();
-      points = _points;
+      points = JSON.parse(_points);
       isCircle = _isCircle;
       if (isCircle) {
         endCircle();
       } else {
         endDrawing();
       }
+      isDrawing = false;
     }
+
+    showMsg = function() {
+      document.getElementById("announcement").classList.remove("hide")
+    };
+    hideMsg = function() {
+      document.getElementById("announcement").classList.add("hide")
+    };
   </script>
 </body>
 

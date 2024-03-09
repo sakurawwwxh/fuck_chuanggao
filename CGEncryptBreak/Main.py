@@ -7,7 +7,7 @@ from GenerateData import generate_jsonsport
 def main():
     user_info = HttpReq.login()
     print("开始运动!")
-    prejudge_jsonsports, jsonsports = generate_jsonsport()
+    prejudge_jsonsports, jsonsports = generate_jsonsport(None)
     prejudge_resp = HttpReq.prejudge_req_new(
         prejudge_jsonsports, user_info['token'], user_info['secret'])
     print(prejudge_resp)

@@ -161,12 +161,14 @@ def generate_random_position(pos_a, pos_o, diff_a, diff_o):
     return round(rand_pos_a, 6), round(rand_pos_o, 6)  # 保留6位小数
 
 
-def generate_jsonsport(point_list=default_point_list, is_circle=True):
+def generate_jsonsport(user_info, point_list=default_point_list, is_circle=True):
     """生成用于/api/l/v7/savesports接口的随机数据"""
     jsonsport = jsonsport_template.copy()
 
+    if user_info is None:
+        user_info = DataManager.get_user_info()
+
     # ############# 固定参数 ############# #
-    user_info = DataManager.get_user_info()
     jsonsport['name'] = user_info['name']  # 姓名
     jsonsport['xh'] = user_info['account']  # 账号（学号）
     """
@@ -359,4 +361,4 @@ def generate_jsonsport(point_list=default_point_list, is_circle=True):
 
 
 if __name__ == '__main__':
-    print(json.dumps(generate_jsonsport()[1]))
+    print(json.dumps(generate_jsonsport(None)[1]))
