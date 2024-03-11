@@ -432,15 +432,19 @@
       }).then(response => response.json()
       ).then(data => {
         console.log('response:', data);
+        let message = "由于未知错误，刷跑失败。";
         if (data.code === 200) {
-          snackbarContainer.MaterialSnackbar.showSnackbar({
-            message: "🎉 恭喜！您已成功完成了一次创高（待审核）"
-          })
-        } else {
-          snackbarContainer.MaterialSnackbar.showSnackbar({
-            message: "由于未知错误，刷跑失败。"
-          })
+          if (data.data[0] !== 1) {
+            message = "最少经过的距离必须大于等于3.0公里！";
+          } else if (data.data[1] !== 1) {
+            message = "开始和结束时间应在0小时2分0秒-2小时0分0秒内！";
+          } else if (data.data[2] !== 1) {
+            message = "不在允许时间段内！";
+          } else {
+            message = "🎉 恭喜！您已成功完成了一次创高（待审核）";
+          }
         }
+        snackbarContainer.MaterialSnackbar.showSnackbar({ message: message })
       }).catch((error) => {
         console.error('Error:', error);
       });
